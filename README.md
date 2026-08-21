@@ -1,2 +1,2 @@
 # jabberguestnew CLIC TO CALL #
-https://ocptech-portal.github.io/Soporte-OCPTECH/
+https://ocptech-portal.github.io/soporte-ocp/
