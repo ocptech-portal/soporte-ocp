@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: jabberguestnew
+    runtime: node
+    buildCommand: npm install --prefix server
+    startCommand: npm start --prefix server
+    healthCheckPath: /health
+    envVars:
+      - key: WEBEX_CLIENT_ID
+        sync: false
+      - key: WEBEX_CLIENT_SECRET
+        sync: false
+      - key: WEBEX_REFRESH_TOKEN
+        sync: false
+      - key: WEBEX_CALL_TOKEN_PATH
+        value: /v1/telephony/click2call/callToken
+      - key: WEBEX_GUEST_NAME
+        value: Unidos por la colaboración
+      - key: CLICK_TO_CALL_CALLED_NUMBER
+        value: '9605'
