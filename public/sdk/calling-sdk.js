@@ -101,7 +101,7 @@ async function getMediaStreams() {
   // Agrega preview local de video sin romper audio si el navegador o SDK no entregan camara.
   try {
     if (Calling && typeof Calling.createCameraStream === 'function') {
-      localVideoStream = await Calling.createCameraStream({ video: true });
+      localVideoStream = await Calling.createCameraStream({ video: false });
       if (localVideoElem && localVideoStream?.outputStream) {
         localVideoElem.srcObject = localVideoStream.outputStream;
       }
