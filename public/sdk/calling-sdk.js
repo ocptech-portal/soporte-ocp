@@ -8,7 +8,6 @@ let incomingCall;
 let localAudioStream;
 let localVideoStream;
 let isLineRegistered = false;
-let callTimeoutId = null;
 
 const callNotifyEvent = new CustomEvent('line:incoming_call', {
   detail: { callObject: call },
@@ -93,12 +92,12 @@ async function getMediaStreams() {
   const localAudioElem = document.getElementById('local-audio');
   const localVideoElem = document.getElementById('local-video');
 
-   Mantiene el flujo original de audio que ya funcionaba.
+  // Mantiene el flujo original de audio que ya funcionaba.
   localAudioStream = await Calling.createMicrophoneStream({ audio: true });
   if (localAudioElem) {
     localAudioElem.srcObject = localAudioStream.outputStream;
   }
-/* antes*/
+
   // Agrega preview local de video sin romper audio si el navegador o SDK no entregan camara.
   try {
     if (Calling && typeof Calling.createCameraStream === 'function') {
@@ -137,7 +136,7 @@ function setVideoElementStream(elementId, streamOrTrack) {
     videoElement.srcObject = new MediaStream([streamOrTrack]);
   }
 }
-//*/
+
 async function initiateCall(number) {
   try {
     if (!isLineRegistered || !line) {
@@ -161,18 +160,11 @@ async function initiateCall(number) {
       call = line.makeCall();
     }
 
-    // ============ MONITOREO DE ERRORES ROAP ============
-    let callConnected = false;
-
     call.on('progress', () => {
-      console.log('[Click to Call] Call progress event fired');
       updateStatus('ok', 'ok', 'ok', 'Llamada en progreso...');
     });
 
     call.on('connect', () => {
-      callConnected = true;
-      clearTimeout(callTimeoutId);
-      console.log('[Click to Call] Call connect event fired');
       updateStatus('ok', 'ok', 'ok', 'Llamada conectada.');
       if (number === '5007' && typeof secondCallNotification !== 'undefined') {
         secondCallNotification.startTimer();
@@ -183,25 +175,20 @@ async function initiateCall(number) {
     });
 
     call.on('remote_media', (track) => {
-      console.log('[Click to Call] Remote media received');
       const remoteAudio = document.getElementById('customer-remote-audio');
       if (remoteAudio) remoteAudio.srcObject = new MediaStream([track]);
     });
 
-     Eventos de video descritos por el sample de Cisco/Webex.
+    // Eventos de video descritos por el sample de Cisco/Webex.
     call.on('media:local_video', (stream) => {
-      console.log('[Click to Call] Local video stream received');
       setVideoElementStream('local-video', stream);
     });
 
-   call.on('media:remote_video', (stream) => {
-      console.log('[Click to Call] Remote video stream received');
+    call.on('media:remote_video', (stream) => {
       setVideoElementStream('remote-video', stream);
     });
 
     call.on('disconnect', () => {
-      console.log('[Click to Call] Call disconnected');
-      clearTimeout(callTimeoutId);
       closeCallWindow();
       cleanupVideoElements();
       setButtonEnabled(true);
@@ -209,56 +196,16 @@ async function initiateCall(number) {
     });
 
     call.on('error', (err) => {
-      clearTimeout(callTimeoutId);
-      console.error('[Click to Call] Call error event:', err);
-      console.error('[Click to Call] Error details:', JSON.stringify(err, null, 2));
+      console.error('[Click to Call] Call error', err);
       closeCallWindow();
       cleanupVideoElements();
       setButtonEnabled(true);
-      const errorMsg = err?.message || err?.errorCode || 'Error desconocido en la llamada';
-      updateStatus('ok', 'ok', 'error', `Error en llamada: ${errorMsg}`);
-    });
-
-    // ============ TIMEOUT DE 30 SEGUNDOS ============
-    // Si no recibimos 'progress' o 'connect' en 30s, algo está mal
-    callTimeoutId = setTimeout(() => {
-      if (!callConnected) {
-        console.error('[Click to Call] Call dial timeout - no progress after 30 seconds');
-        console.error('[Click to Call] Call state:', call?.state);
-        console.error('[Click to Call] Call object:', call);
-        
-        // Intenta colgar
-        try {
-          if (call) call.end();
-        } catch (e) {
-          console.warn('[Click to Call] Could not end call:', e);
-        }
-
-        closeCallWindow();
-        cleanupVideoElements();
-        setButtonEnabled(true);
-        updateStatus(
-          'ok', 
-          'ok', 
-          'error', 
-          'Timeout: La llamada no progresó. Verifica que el número sea válido (99999 es un ejemplo).'
-        );
-      }
-    }, 30000);
-
-    console.log('[Click to Call] Calling dial with stream:', localAudioStream);
-    console.log('[Click to Call] Audio stream details:', {
-      hasOutputStream: !!localAudioStream?.outputStream,
-      streamType: typeof localAudioStream,
+      updateStatus('ok', 'ok', 'error', 'No se pudo realizar la llamada. Revisa consola.');
     });
 
     await call.dial(localAudioStream);
-
-    console.log('[Click to Call] dial() completed without error');
   } catch (err) {
-    clearTimeout(callTimeoutId);
-    console.error('[Click to Call] Failed in initiateCall catch block:', err);
-    console.error('[Click to Call] Error stack:', err?.stack);
+    console.error('[Click to Call] Failed in initiating call', err);
     closeCallWindow();
     cleanupVideoElements();
     setButtonEnabled(true);
@@ -283,7 +230,6 @@ function cleanupVideoElements() {
 
 function disconnectCall() {
   try {
-    clearTimeout(callTimeoutId);
     if (call) call.end();
     closeCallWindow();
     cleanupVideoElements();
