@@ -203,7 +203,7 @@ async function initiateCall(number) {
       console.log('[Click to Call] Call disconnected');
       clearTimeout(callTimeoutId);
       closeCallWindow();
-      //cleanupVideoElements();
+      cleanupVideoElements();
       setButtonEnabled(true);
       updateStatus('ok', 'ok', 'ok', 'Llamada finalizada. Listo para llamar nuevamente.');
     });
@@ -213,7 +213,7 @@ async function initiateCall(number) {
       console.error('[Click to Call] Call error event:', err);
       console.error('[Click to Call] Error details:', JSON.stringify(err, null, 2));
       closeCallWindow();
-      //cleanupVideoElements();
+      cleanupVideoElements();
       setButtonEnabled(true);
       const errorMsg = err?.message || err?.errorCode || 'Error desconocido en la llamada';
       updateStatus('ok', 'ok', 'error', `Error en llamada: ${errorMsg}`);
@@ -235,7 +235,7 @@ async function initiateCall(number) {
         }
 
         closeCallWindow();
-        //cleanupVideoElements();
+        cleanupVideoElements();
         setButtonEnabled(true);
         updateStatus(
           'ok', 
