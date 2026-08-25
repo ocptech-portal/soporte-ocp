@@ -90,7 +90,7 @@ function setupLineListeners() {
 
 async function getMediaStreams() {
   const localAudioElem = document.getElementById('local-audio');
-  const localVideoElem = document.getElementById('local-video');
+  //const localVideoElem = document.getElementById('local-video');
 
   // Mantiene el flujo original de audio que ya funcionaba.
   localAudioStream = await Calling.createMicrophoneStream({ audio: true });
@@ -106,7 +106,7 @@ async function getMediaStreams() {
         localVideoElem.srcObject = localVideoStream.outputStream;
       }
     } else if (navigator.mediaDevices?.getUserMedia) {
-      const browserVideoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      const browserVideoStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: false });
       localVideoStream = browserVideoStream;
       if (localVideoElem) {
         localVideoElem.srcObject = browserVideoStream;
