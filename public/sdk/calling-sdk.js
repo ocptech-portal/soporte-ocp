@@ -98,7 +98,7 @@ async function getMediaStreams() {
   if (localAudioElem) {
     localAudioElem.srcObject = localAudioStream.outputStream;
   }
-
+/*
   // Agrega preview local de video sin romper audio si el navegador o SDK no entregan camara.
   try {
     if (Calling && typeof Calling.createCameraStream === 'function') {
@@ -137,7 +137,7 @@ function setVideoElementStream(elementId, streamOrTrack) {
     videoElement.srcObject = new MediaStream([streamOrTrack]);
   }
 }
-
+*/
 async function initiateCall(number) {
   try {
     if (!isLineRegistered || !line) {
