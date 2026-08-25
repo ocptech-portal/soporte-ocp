@@ -91,7 +91,7 @@ function setupLineListeners() {
 
 async function getMediaStreams() {
   const localAudioElem = document.getElementById('local-audio');
-  const localVideoElem = document.getElementById('local-video');
+  //const localVideoElem = document.getElementById('local-video');
 
   // Mantiene el flujo original de audio que ya funcionaba.
   localAudioStream = await Calling.createMicrophoneStream({ audio: true });
