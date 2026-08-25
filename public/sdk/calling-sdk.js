@@ -91,9 +91,9 @@ function setupLineListeners() {
 
 async function getMediaStreams() {
   const localAudioElem = document.getElementById('local-audio');
-  //const localVideoElem = document.getElementById('local-video');
+  const localVideoElem = document.getElementById('local-video');
 
-  // Mantiene el flujo original de audio que ya funcionaba.
+   Mantiene el flujo original de audio que ya funcionaba.
   localAudioStream = await Calling.createMicrophoneStream({ audio: true });
   if (localAudioElem) {
     localAudioElem.srcObject = localAudioStream.outputStream;
@@ -188,15 +188,15 @@ async function initiateCall(number) {
       if (remoteAudio) remoteAudio.srcObject = new MediaStream([track]);
     });
 
-    // Eventos de video descritos por el sample de Cisco/Webex.
-  //  call.on('media:local_video', (stream) => {
-   //   console.log('[Click to Call] Local video stream received');
-      //setVideoElementStream('local-video', stream);
+     Eventos de video descritos por el sample de Cisco/Webex.
+    call.on('media:local_video', (stream) => {
+      console.log('[Click to Call] Local video stream received');
+      setVideoElementStream('local-video', stream);
     });
 
-   // call.on('media:remote_video', (stream) => {
-   //   console.log('[Click to Call] Remote video stream received');
-   //   setVideoElementStream('remote-video', stream);
+   call.on('media:remote_video', (stream) => {
+      console.log('[Click to Call] Remote video stream received');
+      setVideoElementStream('remote-video', stream);
     });
 
     call.on('disconnect', () => {
