@@ -1,7 +1,7 @@
 // Render migration: Service App credentials are NEVER stored in browser JavaScript.
 // The backend refreshes the Service App OAuth token and requests Webex guest/call tokens.
-const CLICK_TO_CALL_CALLED_NUMBER = '9605';
-const CLICK_TO_CALL_GUEST_NAME = 'Unidos por la colaboración';
+const CLICK_TO_CALL_CALLED_NUMBER = '0676';
+const CLICK_TO_CALL_GUEST_NAME = 'JCA Test';
 const WEBEX_DISCOVERY_REGION = 'US-EAST';
 const WEBEX_DISCOVERY_COUNTRY = 'US';
 
